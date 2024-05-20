@@ -1,38 +1,20 @@
-from flask import Flask, request, jsonify
-from flask_marshmallow import Marshmallow
+from flask import request, jsonify
 from config.db import db, app, ma
-from marshmallow import fields
+from models.UsuarioModel import Usuario, UsuarioModelSchema
 
-# Define the UsuarioModelSchema using Marshmallow
-class UsuarioModelSchema(ma.Schema):
-    class Meta:
-        fields = ('idusuario', 'nombre', 'apellido', 'direccion', 'telefono', 'correo', 'contrasena')
-
-    idusuario = fields.Int(dump_only=True)  # Set idusuario as read-only
-    nombre = fields.Str(required=True)
-    apellido = fields.Str(required=True)
-    direccion = fields.Str()
-    telefono = fields.Str()
-    correo = fields.Str(required=True)
-    contrasena = fields.Str(required=True)
-
-# Initialize the Marshmallow schema
+# Inicialización de esquemas
 usuario_schema = UsuarioModelSchema()
-usuarios_schema = UsuarioModelSchema(many=True)  # For multiple users
-
-# Import the Usuario model
-from app.models import Usuario # type: ignore
-
+usuarios_schema = UsuarioModelSchema(many=True)
 
 @app.route('/usuarios', methods=['GET', 'POST'])
 def usuarios():
     if request.method == 'GET':
-        # Get all users
+        # Obtener todos los usuarios
         all_usuarios = Usuario.query.all()
         return jsonify(usuarios_schema.dump(all_usuarios))
 
-    # Add a new user
     if request.method == 'POST':
+        # Agregar un nuevo usuario
         new_user_data = request.get_json()
         new_user = Usuario(
             nombre=new_user_data['nombre'],
@@ -44,43 +26,36 @@ def usuarios():
         )
         db.session.add(new_user)
         db.session.commit()
-
         return jsonify(usuario_schema.dump(new_user)), 201  # Created status code
 
 @app.route('/usuarios/<int:idusuario>', methods=['GET', 'PUT', 'DELETE'])
 def usuario_by_id(idusuario):
-    if request.method == 'GET':
-        # Get a specific user by ID
-        user = Usuario.query.get(idusuario)
-        if not user:
-            return jsonify({'message': 'Usuario no encontrado'}), 404  # Not Found
+    user = Usuario.query.get(idusuario)
+    if not user:
+        return jsonify({'message': 'Usuario no encontrado'}), 404
 
+    if request.method == 'GET':
+        # Obtener un usuario específico por ID
         return jsonify(usuario_schema.dump(user))
 
     if request.method == 'PUT':
-        # Update an existing user
-        user = Usuario.query.get(idusuario)
-        if not user:
-            return jsonify({'message': 'Usuario no encontrado'}), 404
-
+        # Actualizar un usuario existente
         update_data = request.get_json()
-        user.nombre = update_data.get('nombre') or user.nombre
-        user.apellido = update_data.get('apellido') or user.apellido
-        user.direccion = update_data.get('direccion') or user.direccion
-        user.telefono = update_data.get('telefono') or user.telefono
-        user.correo = update_data.get('correo') or user.correo
-        user.contrasena = update_data.get('contrasena') or user.contrasena
+        user.nombre = update_data.get('nombre', user.nombre)
+        user.apellido = update_data.get('apellido', user.apellido)
+        user.direccion = update_data.get('direccion', user.direccion)
+        user.telefono = update_data.get('telefono', user.telefono)
+        user.correo = update_data.get('correo', user.correo)
+        user.contrasena = update_data.get('contrasena', user.contrasena)
 
         db.session.commit()
         return jsonify(usuario_schema.dump(user))
 
     if request.method == 'DELETE':
-        # Delete a user by ID
-        user = Usuario.query.get(idusuario)
-        if not user:
-            return jsonify({'message': 'Usuario no encontrado'}), 404
-
+        # Eliminar un usuario por ID
         db.session.delete(user)
         db.session.commit()
-
         return jsonify({'message': 'Usuario eliminado'}), 204  # No Content
+
+if __name__ == '__main__':
+    app.run(debug=True)
