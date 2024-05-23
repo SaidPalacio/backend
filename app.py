@@ -4,10 +4,12 @@ from config.db import app
 # trabajar en las rutas de bluprint con respectos a las api's
 from api.UsuariosApi import ruta_user
 from api.ProveedorApi import ruta_provee
+from api.SillasApi import ruta_silla
 
 # Importar los Blueprints
 app.register_blueprint(ruta_user, url_prefix="/api")
 app.register_blueprint(ruta_provee, url_prefix="/api")
+app.register_blueprint(ruta_silla, url_prefix="/api")
 
 # config el servidor
 
