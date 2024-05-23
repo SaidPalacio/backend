@@ -5,11 +5,13 @@ from config.db import app
 from api.UsuariosApi import ruta_user
 from api.ProveedorApi import ruta_provee
 from api.SillasApi import ruta_silla
+from api.CategoriasApi import ruta_categoria
 
 # Importar los Blueprints
 app.register_blueprint(ruta_user, url_prefix="/api")
 app.register_blueprint(ruta_provee, url_prefix="/api")
 app.register_blueprint(ruta_silla, url_prefix="/api")
+app.register_blueprint(ruta_categoria, url_prefix="/api")
 
 # config el servidor
 
