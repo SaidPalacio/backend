@@ -7,6 +7,7 @@ from api.ProveedorApi import ruta_provee
 from api.SillasApi import ruta_silla
 from api.CategoriasApi import ruta_categoria
 from api.ReservaApi import ruta_reserva
+from api.PagoApi import ruta_pago
 
 # Importar los Blueprints
 app.register_blueprint(ruta_user, url_prefix="/api")
@@ -14,6 +15,7 @@ app.register_blueprint(ruta_provee, url_prefix="/api")
 app.register_blueprint(ruta_silla, url_prefix="/api")
 app.register_blueprint(ruta_categoria, url_prefix="/api")
 app.register_blueprint(ruta_reserva, url_prefix="/api")
+app.register_blueprint(ruta_pago, url_prefix="/api")
 
 # config el servidor
 
