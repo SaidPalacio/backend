@@ -1,4 +1,6 @@
 from flask import Flask, Blueprint, request, redirect, render_template, jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from config.db import app, db, ma
 
 # llamamos al modelo de Sillas
@@ -10,12 +12,14 @@ sillas_schema = SillasSchema()
 sillas_schemas = SillasSchema(many=True)
 
 @ruta_silla.route("/sillas", methods=["GET"])
+@jwt_required()
 def all_sillas():
     resultAll = Sillas.query.all()
     respo = sillas_schemas(resultAll)
     return jsonify(respo)
 
 @ruta_silla.route("/registrarSilla", methods=['POST'])
+@jwt_required()
 def registrar_silla():
     nombre = request.json['nombre']
     categoria = request.json['categoria']
@@ -31,6 +35,7 @@ def registrar_silla():
     return "Guardado"
 
 @ruta_silla.route("eliminarSilla", methods=['DELETE'])
+@jwt_required()
 def eliminar_silla():
     id = request.json['id'] 
     silla = Sillas.query.get(id)    
