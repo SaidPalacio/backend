@@ -17,9 +17,8 @@ def alluser():
     return jsonify(respo)
 
 @ruta_user.route("/registrarUsuario", methods=['POST'])
-@jwt_required()
 def registrarUsuario():
-    nombre= request.json['nombre']
+    nombre = request.json['nombre']
     apellido = request.json['apellido']
     direccion = request.json['direccion']
     telefono = request.json['telefono']
@@ -31,7 +30,6 @@ def registrarUsuario():
     return "Guardado"
 
 @ruta_user.route("/login", methods=['POST'])
-@jwt_required()
 def login():
     correo = request.json['correo']
     contrasena = request.json['contrasena']
