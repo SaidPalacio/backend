@@ -16,4 +16,4 @@ SQLAlchemy==2.0.29
 typing_extensions==4.10.0
 Werkzeug==3.0.1
 flask_jwt_extended
-
+flask_cors
