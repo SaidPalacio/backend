@@ -19,7 +19,7 @@ def all_sillas():
     return jsonify(respo)
 
 @ruta_silla.route("/registrarSilla", methods=['POST'])
-@jwt_required()
+
 def registrar_silla():
     nombre = request.json['nombre']
     categoria = request.json['categoria']
@@ -32,6 +32,16 @@ def registrar_silla():
     db.session.add(new_silla)
     db.session.commit()
     return "Guardado"
+
+@ruta_silla.route("/sillaCreada", methods=['POST'])
+def silla_creada():
+    nombre = request.json['nombre']
+    silla = Sillas.query.filter_by(nombre=nombre).first()
+    if silla:
+        return jsonify({"msg": "Silla encontrada", "silla": silla.serialize()})
+    return jsonify({"msg": "Silla no encontrada"}), 404
+    
+    
 
 @ruta_silla.route("eliminarSilla", methods=['DELETE'])
 @jwt_required()
