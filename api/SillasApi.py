@@ -19,7 +19,6 @@ def all_sillas():
     return jsonify(respo)
 
 @ruta_silla.route("/registrarSilla", methods=['POST'])
-
 def registrar_silla():
     nombre = request.json['nombre']
     categoria = request.json['categoria']
@@ -28,7 +27,7 @@ def registrar_silla():
     precio = request.json['precio']
     promocion = request.json['promocion']
     cantidad = request.json['cantidad']
-    new_silla = Sillas(nombre, categoria, descripcion, imagenes, precio, promocion, cantidad)
+    new_silla = Sillas(nombre, categoria, descripcion, precio, promocion, imagenes, cantidad)
     db.session.add(new_silla)
     db.session.commit()
     return "Guardado"

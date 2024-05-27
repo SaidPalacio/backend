@@ -8,7 +8,7 @@ class Sillas(db.Model):
     categoria = db.Column(db.String(50))
     descripcion = db.Column(db.String(100))
     precio = db.Column(db.Double())
-    promocion = db.Column(db.String(), default=False)
+    promocion = db.Column(db.String(50))
     imagenes = db.Column(db.String())
     cantidad = db.Column(db.Integer(), default=0)
 
@@ -20,6 +20,18 @@ class Sillas(db.Model):
         self.promocion = promocion
         self.imagenes = imagenes
         self.cantidad = cantidad
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'categoria': self.categoria,
+            'descripcion': self.descripcion,
+            'precio': self.precio,
+            'promocion': self.promocion,
+            'imagenes': self.imagenes,
+            'cantidad': self.cantidad
+        }
 
 with app.app_context():
     db.create_all()
