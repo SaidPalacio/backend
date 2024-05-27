@@ -6,10 +6,10 @@ class Sillas(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50))
     categoria = db.Column(db.String(50))
-    descripcion = db.Column(db.Text())
-    precio = db.Column(db.Float())
-    promocion = db.Column(db.Boolean(), default=False)
-    imagenes = db.Column(db.Text())
+    descripcion = db.Column(db.String(100))
+    precio = db.Column(db.Double())
+    promocion = db.Column(db.String(), default=False)
+    imagenes = db.Column(db.String())
     cantidad = db.Column(db.Integer(), default=0)
 
     def __init__(self, nombre, categoria, descripcion, precio, promocion, imagenes, cantidad):
@@ -26,4 +26,4 @@ with app.app_context():
 
 class SillasSchema(ma.Schema):
     class Meta:
-        fields = ('idsilla', 'nombre', 'categoria', 'descripcion', 'precio', 'promocion', 'imagenes', 'cantidad')
+        fields = ('id_silla', 'nombre', 'categoria', 'descripcion', 'precio', 'promocion', 'imagenes', 'cantidad')

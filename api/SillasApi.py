@@ -24,12 +24,11 @@ def registrar_silla():
     nombre = request.json['nombre']
     categoria = request.json['categoria']
     descripcion = request.json['descripcion']
-    id = request.json['id']
     imagenes = request.json['imagenes']
     precio = request.json['precio']
     promocion = request.json['promocion']
     cantidad = request.json['cantidad']
-    new_silla = Sillas(nombre, categoria, descripcion, id, imagenes, precio, promocion, cantidad)
+    new_silla = Sillas(nombre, categoria, descripcion, imagenes, precio, promocion, cantidad)
     db.session.add(new_silla)
     db.session.commit()
     return "Guardado"
