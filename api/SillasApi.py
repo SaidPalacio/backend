@@ -40,7 +40,33 @@ def silla_creada():
         return jsonify({"msg": "Silla encontrada", "silla": silla.serialize()})
     return jsonify({"msg": "Silla no encontrada"}), 404
     
-    
+@ruta_silla.route("/Obtenersillas", methods=["GET"])
+def get_all_sillas():
+    try:
+        # Consulta todas las sillas en la base de datos
+        sillas = Sillas.query.all()
+
+        # Serializa las sillas a un formato JSON
+        sillas_json = []
+        for silla in sillas:
+            silla_data = {
+                "id": silla.id,
+                "nombre": silla.nombre,
+                "categoria": silla.categoria,
+                "descripcion": silla.descripcion,
+                "precio": silla.precio,
+                "promocion": silla.promocion,
+                "imagenes": silla.imagenes,
+                "cantidad": silla.cantidad
+            }
+            sillas_json.append(silla_data)
+
+        # Devuelve la lista de sillas en formato JSON
+        return jsonify(sillas_json), 200
+    except Exception as e:
+        # En caso de error, devuelve un mensaje de error
+        return jsonify({"message": "Error al obtener las sillas", "error": str(e)}), 500
+
 
 @ruta_silla.route("eliminarSilla", methods=['DELETE'])
 @jwt_required()

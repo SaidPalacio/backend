@@ -28,6 +28,29 @@ def registrarCategoria():
     db.session.commit()
     return "Guardado"
 
+@ruta_categoria.route("/Obtenercategorias", methods=["GET"])
+def get_all_categorias():
+    try:
+        # Consulta todas las categorias en la base de datos
+        categorias = Categoria.query.all()
+
+        # Serializa las sillas a un formato JSON
+        categorias_json = []
+        for categoria in categorias:
+            categoria_data = {
+                "id": categoria.id,
+                "nombre": categoria.nombre,
+                "imagenes": categoria.imagenes,
+            }
+            categorias_json.append(categoria_data)
+
+        # Devuelve la lista de categorias en formato JSON
+        return jsonify(categorias_json), 200
+    except Exception as e:
+        # En caso de error, devuelve un mensaje de error
+        return jsonify({"message": "Error al obtener las categorias", "error": str(e)}), 500
+
+
 @ruta_categoria.route("eliminarCategoria", methods=['DELETE'])
 @jwt_required()
 def eliminarCategoria():
