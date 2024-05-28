@@ -19,7 +19,7 @@ def all_reservas():
     return jsonify(respo)
 
 @ruta_reserva.route("/registrarReserva", methods=['POST'])
-@jwt_required()
+
 def registrar_reserva():
     nombre = request.json['nombre']
     categoria = request.json['categoria']
@@ -28,7 +28,9 @@ def registrar_reserva():
     precio = request.json['precio']
     promocion = request.json['promocion']
     cantidad = request.json['cantidad']
-    new_reserva = Reserva(nombre, categoria, descripcion,imagenes, precio, promocion, cantidad)
+    idusuario = request.json['idusuario']
+    idsilla = request.json['idsilla']
+    new_reserva = Reserva(nombre, categoria, descripcion,imagenes, precio, promocion, cantidad, idusuario, idsilla)
     db.session.add(new_reserva)
     db.session.commit()
     return "Guardado"
