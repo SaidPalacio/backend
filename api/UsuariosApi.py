@@ -29,6 +29,33 @@ def registrarUsuario():
     db.session.commit()
     return "Guardado"
 
+@ruta_user.route("/Obtenerusuarios", methods=["GET"])
+def get_all_usuarios():
+    try:
+        # Consulta todos los usuarios en la base de datos
+        usuarios = Users.query.all()
+
+        # Serializa los usuarios a un formato JSON
+        usuarios_json = []
+        for usuario in usuarios:
+            usuario_data = {
+                "id": usuario.id,
+                "nombre": usuario.nombre,
+                "apellido": usuario.apellido,
+                "direccion": usuario.direccion,
+                "telefono": usuario.telefono,
+                "correo": usuario.correo,
+                "contrasena": usuario.contrasena
+            }
+            usuarios_json.append(usuario_data)
+
+        # Devuelve la lista de usuarios en formato JSON
+        return jsonify(usuarios_json), 200
+    except Exception as e:
+        # En caso de error, devuelve un mensaje de error
+        return jsonify({"message": "Error al obtener las usuarios", "error": str(e)}), 500
+
+
 @ruta_user.route("/login", methods=['POST'])
 def login():
     correo = request.json['correo']

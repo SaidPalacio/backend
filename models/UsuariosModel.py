@@ -24,5 +24,5 @@ with app.app_context():
     
 class UsersSchema(ma.Schema):
     class Meta:
-        fields = ('id_usuario', 'nombre', 'apellido', 'direccion', 'telefono', 'correo', 'contrasena')
+        fields = ('id', 'nombre', 'apellido', 'direccion', 'telefono', 'correo', 'contrasena')
 
