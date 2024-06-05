@@ -2,9 +2,11 @@ from flask import Flask, Blueprint, request, redirect, render_template, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from config.db import app, db, ma
+from flask import jsonify
+from common.routeProtection import token_required
 
 # llamamos al modelo de Sillas
-from models.SillasModel import Sillas, SillasSchema 
+from models.SillasModel import Sillas, SillasSchema
 
 ruta_silla = Blueprint("route_silla", __name__)
 
@@ -19,6 +21,7 @@ def all_sillas():
     return jsonify(respo)
 
 @ruta_silla.route("/registrarSilla", methods=['POST'])
+@token_required
 def registrar_silla():
     nombre = request.json['nombre']
     categoria = request.json['categoria']
@@ -27,10 +30,13 @@ def registrar_silla():
     precio = request.json['precio']
     promocion = request.json['promocion']
     cantidad = request.json['cantidad']
+
     new_silla = Sillas(nombre, categoria, descripcion, precio, promocion, imagenes, cantidad)
+
     db.session.add(new_silla)
     db.session.commit()
-    return "Guardado"
+
+    return jsonify(sillas_schema.dump(new_silla))
 
 @ruta_silla.route("/sillaCreada", methods=['POST'])
 def silla_creada():
@@ -39,7 +45,9 @@ def silla_creada():
     if silla:
         return jsonify({"msg": "Silla encontrada", "silla": silla.serialize()})
     return jsonify({"msg": "Silla no encontrada"}), 404
-    
+
+
+
 @ruta_silla.route("/Obtenersillas", methods=["GET"])
 def get_all_sillas():
     try:
@@ -69,10 +77,11 @@ def get_all_sillas():
 
 
 @ruta_silla.route("eliminarSilla", methods=['DELETE'])
-@jwt_required()
 def eliminar_silla():
-    id = request.json['id'] 
-    silla = Sillas.query.get(id)    
+    id = request.json['id']
+    silla = Sillas.query.get(id)
     db.session.delete(silla)
-    db.session.commit()     
+    db.session.commit()
     return jsonify(sillas_schema.dump(silla))
+
+

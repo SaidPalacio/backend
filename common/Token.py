@@ -10,16 +10,18 @@ def generar_fecha_vencimiento(dias=0, horas=0, minutos=0, segundos=0):
     return Out_response(datos=fecha_vencimiento)
 
 # Función para generar token
-def generar_token(user_token, pass_token):
+def generar_token(id,nombre,correo):
     try:
-        fecha_vencimiento = generar_fecha_vencimiento(segundos=240)["token"]
+        fecha_vencimiento = generar_fecha_vencimiento(minutos=20)["token"]
         payload = {
             "exp": fecha_vencimiento,
-            "user_id": user_token,
-            "user_pass": pass_token,
+            "id": id,
+            "nombre": nombre,
+            "correo":correo
+
         }
         print(f"Generando Token {payload}")
-        
+
         token = jwt.encode(payload, "pruebaToken", algorithm="HS256")
         return Out_response(False, "Token generado exitosamente", datos=token)
 
@@ -80,3 +82,4 @@ def Error_response(err, mensaje, codigo_error=None):
             "data": {"Codigo interno": codigo_error, "Mensaje Error": err.args[0]},
         }
     return res
+

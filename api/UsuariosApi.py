@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from common.Token import generar_token
 from config.db import db
 from models.UsuariosModel import Users, UsersSchema
 
@@ -23,7 +24,7 @@ def registrarUsuario():
     direccion = request.json['direccion']
     telefono = request.json['telefono']
     correo = request.json['correo']
-    contrasena = generate_password_hash(request.json['contrasena'])
+    contrasena = request.json['contrasena']
     newuser = Users(nombre, apellido, direccion, telefono, correo, contrasena)
     db.session.add(newuser)
     db.session.commit()
@@ -56,8 +57,9 @@ def get_all_usuarios():
         return jsonify({"message": "Error al obtener las usuarios", "error": str(e)}), 500
 
 
+
 @ruta_user.route("/login", methods=['POST'])
-def login():
+def loginn():
     correo = request.json['correo']
     contrasena = request.json['contrasena']
     user = Users.query.filter_by(correo=correo).first()
@@ -66,8 +68,33 @@ def login():
         return jsonify(access_token=access_token)
     return jsonify({"msg": "Bad username or password"}), 401
 
+
+@ruta_user.route("/loginusuarios", methods=['POST'])
+def login():
+    correo = request.json['correo']
+    contrasena = request.json['contrasena']
+
+    if not correo or not contrasena:
+        return jsonify({"message": "correo and contrasena are required"}), 400
+
+    cliente = Users.query.filter_by(correo=correo).first()
+
+    if not cliente:
+        return jsonify({"message": "Invalid correo or contrasena"}), 401
+
+
+    if cliente.contrasena != contrasena:
+        return jsonify({"message": "Invalid correo or contrasena"}), 401
+
+    # Generar token JWT
+    token = generar_token(cliente.id, cliente.nombre,cliente.correo)
+
+    return jsonify({"cliente_id": cliente.id,"token": token["token"]}), 200
+
+
+
+
 @ruta_user.route("/eliminarUsuario", methods=['DELETE'])
-@jwt_required()
 def eliminarUsuario():
     id = request.json['id']
     usuario = Users.query.get(id)

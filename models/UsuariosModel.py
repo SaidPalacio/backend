@@ -3,7 +3,7 @@ from config.db import db, app, ma
 class Users(db.Model):
     __tablename__ ='Usuarios'
 
-    id = db.Column(db.Integer, primary_key = True) 
+    id = db.Column(db.Integer, primary_key = True)
     nombre = db.Column(db.String(50))
     apellido = db.Column(db.String(50))
     direccion = db.Column(db.String(255))
@@ -18,11 +18,10 @@ class Users(db.Model):
         self.telefono = telefono
         self.correo = correo
         self.contrasena = contrasena
-    
+
 with app.app_context():
     db.create_all()
-    
+
 class UsersSchema(ma.Schema):
     class Meta:
         fields = ('id', 'nombre', 'apellido', 'direccion', 'telefono', 'correo', 'contrasena')
-
