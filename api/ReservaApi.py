@@ -21,6 +21,7 @@ def all_reservas():
 
 @ruta_reserva.route("/registrarReserva", methods=['POST'])
 @token_required
+
 def registrar_reserva():
     idusuario = request.json['idusuario']
     idsilla = request.json['idsilla']
@@ -32,10 +33,13 @@ def registrar_reserva():
     imagenes = request.json['imagenes']
     cantidad = request.json['cantidad']
     new_reserva = Reserva(idusuario,idsilla,nombre,categoria,descripcion,precio,promocion,imagenes,cantidad)
+    idusuario = request.json['idusuario']
+    idsilla = request.json['idsilla']
+    new_reserva = Reserva(nombre, categoria, descripcion,imagenes, precio, promocion, cantidad, idusuario, idsilla)
     db.session.add(new_reserva)
     db.session.commit()
     return "Guardado"
-
+    
 @ruta_reserva.route("/ObtenerReservas", methods=["GET"])
 @token_required
 def get_all_reservas():

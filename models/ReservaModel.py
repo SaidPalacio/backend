@@ -23,6 +23,8 @@ class Reserva(db.Model):
         self.promocion = promocion
         self.imagenes = imagenes
         self.cantidad = cantidad
+        self.idusuario = idusuario
+        self.idsilla = idsilla
 
 with app.app_context():
     db.create_all()
